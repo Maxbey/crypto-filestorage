@@ -1,0 +1,49 @@
+<md-content class="Page-container" ng-controller="LoginController as vm">
+  <div class="Login-formContainer" layout="column" layout-align="center center">
+
+    <h1 class="md-headline">Crypto App</h1>
+
+    <form name="LoginForm" ng-submit="vm.login(LoginForm)">
+      <div>
+        <md-input-container class="LoginForm-inputContainer">
+          <label>Email</label>
+          <input required name="email" type="email" ng-model="vm.email"
+                 ng-change="vm.resetServerValidation(LoginForm.email)">
+          <div ng-messages="LoginForm.email.$error" role="alert">
+            <div ng-message="serverValidation">
+              {{ vm.backendValidationErrors.email.message }}
+            </div>
+            <div ng-message="email">
+              Enter a correct email address
+            </div>
+          </div>
+        </md-input-container>
+      </div>
+
+      <div>
+        <md-input-container class="LoginForm-inputContainer">
+          <label>Password</label>
+          <input required type="password" ng-model="vm.password">
+        </md-input-container>
+      </div>
+
+      <div>
+        <md-input-container class="LoginForm-inputContainer">
+          <label>Authy token</label>
+          <input required name="authy_token" type="text" ng-change="vm.resetServerValidation(LoginForm.authy_token)" ng-model="vm.authy_token">
+          <div ng-messages="LoginForm.authy_token.$error" role="alert">
+            <div ng-message="serverValidation">
+              {{ vm.backendValidationErrors.authy_token.message }}
+            </div>
+          </div>
+        </md-input-container>
+      </div>
+
+      <div layout="column" layout-align="center center">
+        <md-button type="submit" class="LoginForm-submit md-primary md-raised">Sign in</md-button>
+      </div>
+    </form>
+
+
+  </div>
+</md-content>

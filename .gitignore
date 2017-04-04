@@ -1,0 +1,10 @@
+spa/node_modules
+spa/.tmp
+spa/.sass-cache
+spa/bower_components
+spa/dist
+spa/gulp-cache
+spa/app/gulp-cache
+spa/coverage
+.idea
+*.pyc

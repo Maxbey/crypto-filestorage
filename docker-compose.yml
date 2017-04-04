@@ -1,0 +1,31 @@
+version: '2'
+services:
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    depends_on:
+      - web
+    ports:
+      - "80:80"
+
+  web:
+    depends_on:
+      - db
+    build:
+      context: ./cryptoapp/
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    environment:
+     - DATABASE_URL=postgres://postgres@db/postgres
+     - DJANGO_CONFIGURATION=Development
+     - DJANGO_SETTINGS_MODULE=app.settings.settings
+     - AUTHY_KEY=PUqN6jBH2yp21mllkQsDJgWkfQrAZ8bN
+    expose:
+        - "8000"
+
+  db:
+    image: postgres
+    expose:
+      - "5432"
