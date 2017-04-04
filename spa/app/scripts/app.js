@@ -11,7 +11,8 @@ angular
         'ngSanitize',
         'ngMaterial',
         'satellizer',
-        'ngDropzone'
+        'ngDropzone',
+        'validation.match'
     ])
     .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider, $authProvider, $mdThemingProvider) {
         $urlRouterProvider.otherwise('/');
@@ -33,10 +34,18 @@ angular
                 }
             })
             .state('enter.login', {
-                url: '/login',
+                url: '/login/',
                 views: {
                     'main@': {
                         templateUrl: 'views/login.html'
+                    }
+                }
+            })
+            .state('enter.register', {
+                url: '/register/',
+                views: {
+                    'main@': {
+                        templateUrl: 'views/register.html'
                     }
                 }
             });
@@ -69,6 +78,14 @@ angular
                         templateUrl: 'views/upload.html'
                     }
                 }
+            })
+            .state('app.manage-groups', {
+                url: '/manage-groups/',
+                views: {
+                    'main@': {
+                        templateUrl: 'views/manage.groups.html'
+                    }
+                }
             });
 
         $locationProvider.html5Mode({
@@ -83,6 +100,8 @@ angular
         $authProvider.loginUrl = 'http://api.cryptoapp.dev/api/auth/login/';
 
         $authProvider.authToken = 'Token';
+        $authProvider.tokenType = 'Token';
+        $authProvider.storageType = 'localStorage';
     }).run(function ($rootScope, $state, $auth, AuthenticationService) {
     var registrationCallback = $rootScope.$on("$stateChangeStart", AuthenticationService.stateControl);
     $rootScope.$on('$destroy', registrationCallback);

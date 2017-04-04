@@ -18,6 +18,8 @@ angular.module('socialAggregator')
         password: vm.password,
         authy_token: vm.authy_token
       }).then(function(response){
+          $auth.setToken(response.data.key);
+          $state.go('app.dashboard');
          ToastService.show('You are successfully logged in');
       }, function(response) {
         ToastService.show('Authentication failed');

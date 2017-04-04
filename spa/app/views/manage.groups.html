@@ -1,0 +1,18 @@
+<md-content class="Page-container" ng-controller="ManageGroupsController as vm">
+    <div class="Login-formContainer" layout="column" layout-align="center center">
+
+        <h1 class="md-headline">Manage groups</h1>
+
+        <div>
+            <md-autocomplete required md-require-match class="AppForm-inputContainer" md-selected-item="vm.selectedUser" md-search-text="vm.searchValue" md-items="user in vm.searchUser(vm.searchValue)"
+                md-item-text="user.username" md-min-length="1" md-floating-label="Find the user">
+                <md-item-template>
+                    <span md-highlight-text="vm.searchValue" md-highlight-flags="^i">{{ user.username }}</span>
+                </md-item-template>
+                <md-not-found>
+                    User not found
+                </md-not-found>
+            </md-autocomplete>
+        </div>
+    </div>
+</md-content>
