@@ -3,7 +3,7 @@
 angular.module('socialAggregator')
   .factory('ToastService', function($mdToast) {
     var delay = 3000,
-      position = 'bottom left',
+      position = 'bottom right',
       action = 'OK';
 
     return {

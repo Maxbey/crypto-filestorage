@@ -99,15 +99,6 @@ class LoginSerializer(BaseLoginSerializer):
         return attrs
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta(object):
-        model = get_user_model()
-        fields = [
-            'id',
-            'username'
-        ]
-
-
 class GroupSerializer(serializers.ModelSerializer):
     class Meta(object):
         model = Group
@@ -117,25 +108,21 @@ class GroupSerializer(serializers.ModelSerializer):
         ]
 
 
-class AddUserToGroupSerializer(serializers.Serializer):
-    user = serializers.PrimaryKeyRelatedField(
-        queryset=get_user_model().objects, write_only=True
-    )
-    group = serializers.PrimaryKeyRelatedField(
-        queryset=Group.objects, write_only=True
+class UserSerializer(serializers.ModelSerializer):
+    groups = serializers.PrimaryKeyRelatedField(
+        read_only=True, many=True
     )
 
-    def create(self, validated_data):
-        user = validated_data.get('user')
-        group = validated_data.get('group')
+    class Meta(object):
+        model = get_user_model()
+        fields = [
+            'id',
+            'username',
+            'groups'
+        ]
 
-        user.groups.add(group)
-        user.save()
 
-        return user
-
-
-class RemoveUserFromGroupsSerializer(serializers.Serializer):
+class UserGroupsSerializer(serializers.Serializer):
     user = serializers.PrimaryKeyRelatedField(
         queryset=get_user_model().objects, write_only=True
     )
@@ -147,9 +134,7 @@ class RemoveUserFromGroupsSerializer(serializers.Serializer):
         user = validated_data.get('user')
         groups = validated_data.get('groups')
 
-        for group in groups:
-            user.groups.remove(group)
-
+        user.groups.set(groups)
         user.save()
 
         return user

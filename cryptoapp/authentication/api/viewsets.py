@@ -14,7 +14,7 @@ from rest_framework.response import Response
 
 from authentication.permissions import CanManageUserPermissions
 from .serializers import RegisterSerializer, UserSerializer, \
-    AddUserToGroupSerializer, RemoveUserFromGroupsSerializer, GroupSerializer
+    GroupSerializer, UserGroupsSerializer
 
 
 class RegisterViewSet(RegisterView):
@@ -65,22 +65,12 @@ class GroupViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     paginator = None
 
 
-class AddUserToGroupViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+class UserGroupsViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     permission_classes = [IsAuthenticated, CanManageUserPermissions]
     authentication_classes = [TokenAuthentication]
 
-    serializer_class = AddUserToGroupSerializer
+    serializer_class = UserGroupsSerializer
     queryset = User.objects.all()
 
     paginator = None
 
-
-class RemoveUserFromGroupsViewSet(mixins.CreateModelMixin,
-                                  viewsets.GenericViewSet):
-    permission_classes = [IsAuthenticated, CanManageUserPermissions]
-    authentication_classes = [TokenAuthentication]
-
-    serializer_class = RemoveUserFromGroupsSerializer
-    queryset = User.objects.all()
-
-    paginator = None
