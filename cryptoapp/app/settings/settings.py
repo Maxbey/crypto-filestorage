@@ -19,11 +19,10 @@ class Development(BaseSettings):
         environ_prefix=''
     )
 
-    MIDDLEWARE_CLASSES = BaseSettings.MIDDLEWARE_CLASSES + \
-                         ['corsheaders.middleware.CorsMiddleware']
-
-    CORS_ALLOW_CREDENTIALS = True
-    CORS_ORIGIN_ALLOW_ALL = True
+    ENC_KEY = values.SecretValue(
+        environ_required=True,
+        environ_prefix=''
+    )
 
 
 class Test(BaseSettings):

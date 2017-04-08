@@ -21,7 +21,8 @@ class BaseSettings(Configuration):
         'allauth',
         'allauth.account',
         'rest_auth.registration',
-        'authentication'
+        'authentication',
+        'filestorage'
     ]
 
     REST_AUTH_SERIALIZERS = {

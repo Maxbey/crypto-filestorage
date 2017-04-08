@@ -14,7 +14,8 @@ angular
         'ngDropzone',
         'validation.match'
     ])
-    .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider, $authProvider, $mdThemingProvider) {
+    .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider, $authProvider, $mdThemingProvider, $compileProvider) {
+        $compileProvider.aHrefSanitizationWhitelist(/^\s*(|blob|):/);
         $urlRouterProvider.otherwise('/');
         $httpProvider.defaults.withCredentials = true;
 
@@ -46,6 +47,14 @@ angular
                 views: {
                     'main@': {
                         templateUrl: 'views/register.html'
+                    }
+                }
+            })
+            .state('app.file-details', {
+                url: '/storage/:id/',
+                views: {
+                    'main@': {
+                        templateUrl: 'views/file.html'
                     }
                 }
             });

@@ -19,4 +19,8 @@ urlpatterns = [
         r'^api/auth/',
         include('authentication.api.urls', namespace='authentication_api')
     ),
+    url(
+        r'^api/storage/',
+        include('filestorage.api.urls', namespace='storage_api')
+    ),
 ]

@@ -3,12 +3,34 @@
 
         <h1 class="md-headline">Upload form</h1>
 
-        <form class="dropzone"
+        <form name="Form">
+            <div>
+                
+            <md-input-container class="LoginForm-inputContainer">
+            <label>Key</label>
+            <input required maxlength="16" minlength="16" name="salt" type="text" ng-model="vm.salt">
+            <div ng-messages="Form.salt.$error" role="alert">
+            <div ng-message="minlength">
+              Key length should be equal to 16
+            </div>
+            <div ng-message="maxlength">
+              Key length should be equal to 16
+            </div>
+            <div ng-message="required">
+              Encryption key is required
+            </div>
+            </div>
+            </md-input-container>
+        </div>
+      </form>
+
+        <form class="dropzone" ng-if="vm.salt.length === 16"
               method="post"
               enctype="multipart/form-data"
               ng-dropzone
               dropzone="vm.dropzone"
-              dropzone-config="vm.dropzoneConfig">
+              dropzone-config="vm.dropzoneConfig"
+              event-handlers="{ 'sending': vm.preUpload }">
         </form>
     </div>
 </md-content>

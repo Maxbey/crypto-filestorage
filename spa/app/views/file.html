@@ -1,0 +1,31 @@
+<md-content class="Page-container" ng-controller="FileController as vm">
+  <div class="Login-formContainer" layout="column" layout-align="center center">
+
+    <h1 class="md-headline">Encrypted: {{ vm.file.name }}</h1>
+
+    <p>{{ vm.file.content }}</p>
+
+    <form name="DecryptForm" ng-submit="vm.verifySalt(DecryptForm)">
+
+      <div>
+        <md-input-container class="LoginForm-inputContainer">
+          <label>Key</label>
+          <input name="salt" type="text" ng-change="vm.resetServerValidation(DecryptForm.salt)" ng-model="vm.salt">
+          <div ng-messages="DecryptForm.salt.$error" role="alert">
+            <div ng-message="serverValidation">
+              {{ vm.backendValidationErrors.salt.message }}
+            </div>
+          </div>
+        </md-input-container>
+      </div>
+
+      <div layout="column" layout-align="center center">
+        <md-button type="submit" class="LoginForm-submit md-primary md-raised">Decrypt</md-button>
+      </div>
+
+      <div layout="column" ng-if="vm.downloadLink" layout-align="center center">
+        <md-button ng-href="{{ vm.downloadLink }}" download="{{ vm.file.name }}" class="LoginForm-submit md-warn md-raised">Download</md-button>
+      </div>
+    </form>
+  </div>
+</md-content>

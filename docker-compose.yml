@@ -22,6 +22,7 @@ services:
      - DJANGO_CONFIGURATION=Development
      - DJANGO_SETTINGS_MODULE=app.settings.settings
      - AUTHY_KEY=PUqN6jBH2yp21mllkQsDJgWkfQrAZ8bN
+     - ENC_KEY=1111111111111111
     expose:
         - "8000"
 

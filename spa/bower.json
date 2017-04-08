@@ -14,7 +14,8 @@
     "satellizer": "^0.14.1",
     "angular-ui-router": "^0.3.1",
     "angular-dropzone": "^0.1.2",
-    "angular-validation-match": "^1.9.0"
+    "angular-validation-match": "^1.9.0",
+    "blob": "*"
   },
   "devDependencies": {
     "angular-mocks": "^1.4.0"
