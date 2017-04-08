@@ -25,23 +25,32 @@ class FileUploadViewSet(viewsets.GenericViewSet):
 
     def create(self, request, *args, **kwargs):
         filename = request.data.get('filename')
-        file = request.data.get('file').read()
+        file_content = request.data.get('file').read()
         salt = request.data.get('salt', None)
+
+        original_content_length = len(file_content)
 
         if salt is None:
             raise ValidationError({'salt': 'This field is required.'})
 
         if not len(salt) == 16:
-            raise ValidationError({'salt': 'Key length should be 16'})
+            raise ValidationError({'salt': 'Key length should be 16.'})
+
+        if not original_content_length:
+            raise ValidationError({'file': "Can't save an empty file."})
+
+        whitespace_count = 16 - (len(file_content) % 16)
+        file_content += (' ' * whitespace_count)
 
         aes = AES.new(salt, AES.MODE_CBC, settings.ENC_KEY)
-        encrypted_content = aes.encrypt(file)
+        encrypted_content = aes.encrypt(file_content)
         content = base64.b64encode(encrypted_content)
 
         File.objects.create(
             user=request.user,
             name=filename,
-            content=content
+            content=content,
+            original_content_length=original_content_length
         )
 
         return Response({}, status.HTTP_201_CREATED)
@@ -80,4 +89,6 @@ class FileDecryptViewSet(viewsets.GenericViewSet):
         content = base64.b64decode(file.content)
         decrypted_content = aes.decrypt(content)
 
-        return Response({'file': decrypted_content})
+        return Response(
+            {'file': decrypted_content[:file.original_content_length]}
+        )

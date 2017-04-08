@@ -8,3 +8,5 @@ class File(models.Model):
 
     name = models.CharField(max_length=255)
     content = models.TextField()
+
+    original_content_length = models.PositiveSmallIntegerField(default=0)
