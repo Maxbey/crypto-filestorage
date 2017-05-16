@@ -1,9 +1,13 @@
+from django.contrib.auth.models import Group
 from rest_framework import serializers
+
+from authentication.api.serializers import GroupSerializer
 from ..models import File
 
 
 class FileSerializer(serializers.ModelSerializer):
     owner = serializers.SerializerMethodField()
+    groups = GroupSerializer(many=True, read_only=True)
 
     def get_owner(self, entry):
         return entry.user.username
@@ -14,7 +18,8 @@ class FileSerializer(serializers.ModelSerializer):
             'id',
             'owner',
             'name',
-            'content'
+            'content',
+            'groups'
         ]
 
 
@@ -27,3 +32,16 @@ class FileDownloadSerializer(serializers.Serializer):
         write_only=True, queryset=File.objects
     )
 
+
+class FileGroupsSerializer(serializers.Serializer):
+    groups = serializers.PrimaryKeyRelatedField(
+        queryset=Group.objects, write_only=True, many=True
+    )
+
+    def update(self, instance, validated_data):
+        groups = validated_data.get('groups')
+
+        instance.groups.set(groups)
+        instance.save()
+
+        return instance

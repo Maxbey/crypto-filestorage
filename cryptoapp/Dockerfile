@@ -8,13 +8,13 @@ RUN apk update && apk add --update libffi-dev freetype-dev libxslt-dev libxml2-d
     g++ build-base linux-headers
 
 COPY ./requirements /usr/requirements/
-COPY . /usr/src/app
 
 WORKDIR /usr/requirements/
 
 RUN pip install -r base.txt
 
 RUN adduser -D myuser
+COPY . /usr/src/app
 WORKDIR /usr/src/app
 
 RUN chown -R myuser.myuser .

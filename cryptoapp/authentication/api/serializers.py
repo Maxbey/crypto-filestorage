@@ -3,7 +3,7 @@ from authy import AuthyException
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, Permission, User
 from django.utils.translation import ugettext_lazy as _
 
 from phonenumber_field.formfields import PhoneNumberField
@@ -100,6 +100,32 @@ class LoginSerializer(BaseLoginSerializer):
 
 
 class GroupSerializer(serializers.ModelSerializer):
+    permissions = serializers.PrimaryKeyRelatedField(
+        required=False, queryset=Permission.objects, many=True
+    )
+    user_set = serializers.PrimaryKeyRelatedField(
+        required=False, queryset=User.objects, many=True
+    )
+
+    def validate_user_set(self, set):
+        user = self.context['request'].user
+        set.append(user)
+
+        return set
+
+    class Meta(object):
+        model = Group
+        fields = [
+            'id',
+            'name',
+            'permissions',
+            'user_set'
+        ]
+
+
+class PermissionSerializer(serializers.ModelSerializer):
+    name = serializers.CharField()
+
     class Meta(object):
         model = Group
         fields = [
@@ -109,32 +135,9 @@ class GroupSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    groups = serializers.PrimaryKeyRelatedField(
-        read_only=True, many=True
-    )
-
     class Meta(object):
         model = get_user_model()
         fields = [
             'id',
-            'username',
-            'groups'
+            'username'
         ]
-
-
-class UserGroupsSerializer(serializers.Serializer):
-    user = serializers.PrimaryKeyRelatedField(
-        queryset=get_user_model().objects, write_only=True
-    )
-    groups = serializers.PrimaryKeyRelatedField(
-        queryset=Group.objects, write_only=True, many=True
-    )
-
-    def create(self, validated_data):
-        user = validated_data.get('user')
-        groups = validated_data.get('groups')
-
-        user.groups.set(groups)
-        user.save()
-
-        return user

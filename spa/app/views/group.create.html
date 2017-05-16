@@ -1,0 +1,52 @@
+<md-content class="Page-container" ng-controller="GroupCreateController as vm">
+    <div class="Login-formContainer" layout="column" layout-align="center center">
+
+        <h1 class="md-headline">Create group</h1>
+
+      <div>
+        <md-input-container class="LoginForm-inputContainer">
+          <label>Name</label>
+          <input required name="name" type="text" ng-model="vm.groupName"
+                 ng-change="vm.resetServerValidation(LoginForm.email)">
+          <div ng-messages="LoginForm.email.$error" role="alert">
+            <div ng-message="serverValidation">
+              {{ vm.backendValidationErrors.email.message }}
+            </div>
+            <div ng-message="email">
+              Enter a correct email address
+            </div>
+          </div>
+        </md-input-container>
+      </div>
+
+        <md-input-container class="AppForm-inputContainer">
+            <label>Users</label>
+            <md-chips ng-model="vm.selectedUsers" md-autocomplete-snap md-require-match="true">
+                <md-autocomplete md-search-text="vm.username" md-items="user in vm.userQuery(vm.username)" md-item-text="user.usrname" md-min-length="0"
+                    md-no-cache="true" placeholder="Select users">
+                    <span md-highlight-text="vm.query">{{ user.username }}</span>
+                </md-autocomplete>
+                <md-chip-template>
+                    <span>{{$chip.username}}</span>
+                </md-chip-template>
+            </md-chips>
+        </md-input-container>
+
+        <md-input-container class="AppForm-inputContainer">
+            <label>Permissions</label>
+            <md-chips ng-model="vm.selectedPermissions" md-autocomplete-snap md-require-match="true">
+                <md-autocomplete md-search-text="vm.query" md-items="permission in vm.permissions" md-item-text="permission.name" md-min-length="0"
+                    md-no-cache="true" placeholder="Select permissions">
+                    <span md-highlight-text="vm.query">{{ permission.name }}</span>
+                </md-autocomplete>
+                <md-chip-template>
+                    <span>{{$chip.name}}</span>
+                </md-chip-template>
+            </md-chips>
+        </md-input-container>
+
+        <div layout="column" layout-align="center center">
+            <md-button ng-click="vm.createGroup()" class="LoginForm-submit md-warn md-raised">Create group</md-button>
+        </div>
+    </div>
+</md-content>

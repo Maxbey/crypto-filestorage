@@ -27,5 +27,24 @@
         <md-button ng-href="{{ vm.downloadLink }}" download="{{ vm.file.name }}" class="LoginForm-submit md-warn md-raised">Download</md-button>
       </div>
     </form>
+
+    <h1 class="md-headline">Manage access</h1>
+
+    <md-input-container class="AppForm-inputContainer">
+            <label>Groups</label>
+            <md-chips ng-model="vm.selectedGroups" md-autocomplete-snap md-require-match="true">
+                <md-autocomplete md-search-text="vm.query" md-items="group in vm.groups" md-item-text="group.name" md-min-length="0"
+                    md-no-cache="true" placeholder="Set groups">
+                    <span md-highlight-text="vm.query">{{ group.name }}</span>
+                </md-autocomplete>
+                <md-chip-template>
+                    <span>{{$chip.name}}</span>
+                </md-chip-template>
+            </md-chips>
+        </md-input-container>
+
+        <div layout="column" layout-align="center center">
+            <md-button ng-click="vm.updateFileGroups()" class="LoginForm-submit md-warn md-raised">Update groups</md-button>
+        </div>
   </div>
 </md-content>

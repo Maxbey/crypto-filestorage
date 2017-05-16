@@ -12,7 +12,8 @@ angular
         'ngMaterial',
         'satellizer',
         'ngDropzone',
-        'validation.match'
+        'validation.match',
+        'md.data.table'
     ])
     .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider, $authProvider, $mdThemingProvider, $compileProvider) {
         $compileProvider.aHrefSanitizationWhitelist(/^\s*(|blob|):/);
@@ -88,11 +89,19 @@ angular
                     }
                 }
             })
-            .state('app.manage-groups', {
-                url: '/manage-groups/',
+            .state('app.groups', {
+                url: '/groups/',
                 views: {
                     'main@': {
-                        templateUrl: 'views/manage.groups.html'
+                        templateUrl: 'views/groups.html'
+                    }
+                }
+            })
+            .state('app.group-create', {
+                url: '/groups/create/',
+                views: {
+                    'main@': {
+                        templateUrl: 'views/group.create.html'
                     }
                 }
             });

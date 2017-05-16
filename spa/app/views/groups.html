@@ -1,0 +1,39 @@
+<md-content class="Page-container" ng-controller="GroupsController as vm">
+    <div class="Login-formContainer" layout="column" layout-align="center center">
+
+        <h1 class="md-headline">Manage groups</h1>
+
+        <md-card>
+            <md-card-content>
+                <md-toolbar class="md-table-toolbar md-default">
+                    <div class="md-toolbar-tools">
+                        <span flex="95">Groups</span>
+                        <md-button class="md-icon-button" aria-label="Add" ui-sref="app.group-create">
+                            <md-icon>add</md-icon>
+                        </md-button>
+                        <md-button class="md-icon-button" aria-label="Delete" ng-click="vm.removeMembers()">
+                            <md-icon>delete_forever</md-icon>
+                        </md-button>
+                    </div>
+                </md-toolbar>
+
+                <md-table-container>
+                    <table md-table md-row-select multiple ng-model="vm.selected">
+                        <thead md-head md-order="vm.tableParams.order">
+                            <tr md-row>
+                                <th md-column md-numeric md-order-by="id"><span>id</span></th>
+                                <th md-column md-order-by="name"><span>name</span></th>
+                            </tr>
+                        </thead>
+                        <tbody md-body>
+                            <tr md-row md-select="group" md-select-id="id" ng-repeat="group in vm.groups | orderBy: vm.tableParams.order | limitTo: vm.tableParams.limit: (vm.tableParams.page - 1) * vm.tableParams.limit">
+                                <td md-cell>{{ group.id }}</td>
+                                <td md-cell>{{ group.name }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </md-table-container>
+            </md-card-content>
+        </md-card>
+    </div>
+</md-content>

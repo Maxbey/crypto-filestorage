@@ -7,11 +7,22 @@ angular.module('socialAggregator')
     return {
       searchUser: searchUser,
       allGroups: allGroups,
-      updateUserGroups: updateUserGroups,
       files: files,
       file: file,
-      verifySalt: verifySalt
+      permissions: permissions,
+      verifySalt: verifySalt,
+      createGroup: createGroup,
+      updateFileGroups: updateFileGroups
     };
+
+    function getIds(collection){
+      var ids = [];
+
+      for (var index in collection)
+        ids.push(collection[index].id);
+      
+      return ids;
+    }
 
     function searchUser(username) {
       var url = baseUrl + '/user/search/';
@@ -29,25 +40,40 @@ angular.module('socialAggregator')
       return $http.get(url);
     }
 
-    function updateUserGroups(user, groups) {
-      var url = baseUrl + '/user/group/';
+    function permissions() {
+      var url = baseUrl + '/permission/';
+
+      return $http.get(url);
+    }
+
+    function createGroup(name, users, permissions) {
+      var url = baseUrl + '/group/';
 
       return $http.post(url, {
-        user: user.id,
-        groups: groups
+        name: name,
+        user_set: getIds(users),
+        permissions: getIds(permissions)
       });
     }
 
     function files() {
-      var url = 'http://api.cryptoapp.dev/api/storage/files/';
+      var url = 'http://api.cryptoapp.dev/api/storage/file/';
 
       return $http.get(url);
     }
 
     function file(id) {
-      var url = 'http://api.cryptoapp.dev/api/storage/files/' + id + '/';
+      var url = 'http://api.cryptoapp.dev/api/storage/file/' + id + '/';
 
       return $http.get(url);
+    }
+
+    function updateFileGroups(id, groups) {
+      var url = 'http://api.cryptoapp.dev/api/storage/file/group/' + id + '/';
+
+      return $http.put(url, {
+        groups: groups
+      });
     }
 
     function verifySalt(fileId, salt){

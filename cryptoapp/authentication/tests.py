@@ -1,23 +1,21 @@
 from django.contrib.auth.models import User
-from rest_framework.test import APITestCase
+from rest_framework.authtoken.models import Token
+from rest_framework.test import APITestCase, APIClient
 
 
 class Test(APITestCase):
-    url = '/api/auth/login/'
+    url = '/api/auth/group/'
 
     def test_test(self):
         user = User.objects.create(
             username='email@email.com',
             email='email@email.com'
         )
-        user.set_password('passpass')
-        user.save()
 
-        payload = {
-            'username': 'email@email.com',
-            'password': 'passpass'
-        }
+        token = Token.objects.create(user=user)
 
-        response = self.client.post(self.url, data=payload)
-        import pudb; pu.db
+        client = APIClient()
+        client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
+
+        response = client.get(self.url)
         a = ''

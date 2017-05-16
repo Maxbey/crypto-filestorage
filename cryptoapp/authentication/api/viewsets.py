@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User, Group, Permission
 
 from rest_auth.app_settings import create_token
 from rest_auth.registration.views import RegisterView
@@ -12,9 +12,9 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from authentication.permissions import CanManageUserPermissions
+from ..permission import OwnerPermission
 from .serializers import RegisterSerializer, UserSerializer, \
-    GroupSerializer, UserGroupsSerializer
+    GroupSerializer, PermissionSerializer
 
 
 class RegisterViewSet(RegisterView):
@@ -31,7 +31,7 @@ class RegisterViewSet(RegisterView):
 
 
 class UserSearchViewSet(viewsets.GenericViewSet):
-    permission_classes = [IsAuthenticated, CanManageUserPermissions]
+    permission_classes = [IsAuthenticated]
     authentication_classes = [TokenAuthentication]
 
     queryset = User.objects.all()
@@ -39,24 +39,24 @@ class UserSearchViewSet(viewsets.GenericViewSet):
     paginator = None
 
     def filter_queryset(self, queryset):
+        if 'username' not in self.request.data:
+            return User.objects.all()
+
         username = self.request.data['username']
 
         return User.objects.filter(username__startswith=username)
 
     @list_route(methods=['post'])
     def search(self, request):
-        if 'username' not in request.data:
-            raise ValidationError(
-                {'username': 'This field is required.'}
-            )
-
         filtered = self.filter_queryset(self.queryset)
 
         return Response(UserSerializer(filtered, many=True).data)
 
 
-class GroupViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
-    permission_classes = [IsAuthenticated, CanManageUserPermissions]
+class GroupViewSet(mixins.ListModelMixin, mixins.CreateModelMixin,
+                   mixins.UpdateModelMixin, mixins.DestroyModelMixin,
+                   viewsets.GenericViewSet):
+    permission_classes = [IsAuthenticated, OwnerPermission]
     authentication_classes = [TokenAuthentication]
 
     serializer_class = GroupSerializer
@@ -64,13 +64,14 @@ class GroupViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 
     paginator = None
 
+    def filter_queryset(self, queryset):
+        return queryset.filter(user=self.request.user)
 
-class UserGroupsViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
-    permission_classes = [IsAuthenticated, CanManageUserPermissions]
+
+class PermissionViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    permission_classes = [IsAuthenticated]
     authentication_classes = [TokenAuthentication]
 
-    serializer_class = UserGroupsSerializer
-    queryset = User.objects.all()
-
-    paginator = None
+    serializer_class = PermissionSerializer
+    queryset = Permission.objects.all()
 
